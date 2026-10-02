@@ -1,0 +1,12 @@
+<template name="state">
+  <view class="demo">{{mode === 'demo' ? '演示环境 · 测试账号 · 非真实交易' : '微信服务 · 业务状态以服务器记录为准'}}</view>
+  <view wx:if="{{loading}}" class="notice" role="status">正在连接服务…</view>
+  <view wx:if="{{error}}" class="error"><text selectable>{{error}}</text><button size="mini" bindtap="refresh" disabled="{{loading || busy}}">重新加载</button><button size="mini" data-page="profile" bindtap="nav">个人中心 / 登录</button></view>
+</template>
+<template name="rows">
+  <view wx:for="{{items}}" wx:key="id" class="listing" data-page="detail" data-id="{{item.id}}" bindtap="nav">
+    <image wx:if="{{item.coverURL}}" class="cover" src="{{item.coverURL}}" mode="aspectFill" aria-label="房源照片" />
+    <view class="grow"><view class="row-title">{{item.title}}</view><view class="muted">{{item.info}}</view><view class="price">{{item.priceLabel}}</view><text wx:if="{{item.featured}}" class="tag">精选</text><text wx:if="{{item.originalPrice > item.price}}" class="tag">已调价</text></view>
+  </view>
+  <view wx:if="{{!items.length}}" class="empty">暂无匹配房源</view>
+</template>

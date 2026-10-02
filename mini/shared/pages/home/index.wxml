@@ -1,0 +1,16 @@
+<import src="../../templates/common.wxml" />
+<view class="page">
+ <template is="state" data="{{loading,error,busy,mode}}" />
+ <view class="section-heading"><view class="title">{{appRole === 'owner' ? '找房 · 卖房' : '联卖工作台'}}</view><text class="muted">{{user.city || ''}}</text></view>
+ <view wx:if="{{!ready && !loading && !error}}" class="panel"><view class="row-title">登录后查看房源与业务</view><view class="muted">{{mode === 'demo' ? '当前为本地演示，不使用真实个人信息。' : '使用微信登录后继续。'}}</view><button data-page="profile" bindtap="nav">前往登录</button></view>
+ <block wx:if="{{ready}}">
+ <view class="home-primary" wx:if="{{role === 'owner' && appRole === 'owner'}}"><button data-page="listings" bindtap="nav"><view class="primary-label">我要找房</view><view class="primary-note">按区域、价格选房</view></button><button class="secondary" data-page="form" data-collection="commissions" bindtap="nav"><view class="primary-label">我要卖房</view><view class="primary-note">登记房屋，联系经纪人</view></button></view>
+ <view class="actions" wx:else><button data-page="listings" bindtap="nav">查找房源</button><button class="secondary" data-page="workspace" bindtap="nav">处理业务</button></view>
+ <view class="quick-links" wx:if="{{appRole === 'agent'}}"><view data-page="form" data-collection="clients" bindtap="nav" wx:if="{{role === 'agent'}}">添加客户</view><view data-page="feed" data-collection="notifications" bindtap="nav">服务通知</view></view>
+ <view class="section-heading"><view class="subtitle">最新房源</view><text class="link" data-page="listings" bindtap="nav">查看全部</text></view>
+ <template is="rows" data="{{items}}" />
+ <block wx:if="{{appRole === 'agent'}}"><view class="section-heading"><view class="subtitle">服务动态</view><text class="link" data-page="feed" data-collection="notifications" bindtap="nav">全部动态</text></view>
+ <view wx:for="{{notifications}}" wx:key="id" class="line"><view>{{item.title}}</view><view class="muted">{{item.content}}</view></view><view wx:if="{{!notifications.length}}" class="empty">暂无新动态</view>
+ </block>
+ </block>
+</view>

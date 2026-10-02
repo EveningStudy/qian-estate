@@ -1,0 +1,19 @@
+# 只允许源码和锁文件，禁止上传环境文件、数据库及证书。
+**
+!package.json
+!package-lock.json
+!index.html
+!vite.config.ts
+!server/
+!server/src/
+!server/src/**
+!scripts/
+!scripts/set-role.ts
+!web/
+!web/**
+!public/
+!public/**
+!deploy/
+!deploy/Dockerfile
+!deploy/tsconfig.server.json
+!deploy/nginx.conf

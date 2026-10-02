@@ -1,0 +1,4 @@
+# 本地校验产物、生产密钥及证书不进入版本控制。
+work/
+.env.production
+certs/

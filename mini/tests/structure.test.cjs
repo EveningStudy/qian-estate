@@ -1,0 +1,4 @@
+const test=require('node:test');const assert=require('node:assert/strict');const {parse,syntax}=require('./wxml.cjs');
+test('条件表达式拒绝HTML转义且接受原生逻辑运算符',()=>{assert.throws(()=>parse('<view wx:if="{{a &amp;&amp; b}}" />'),/HTML/);assert.doesNotThrow(()=>parse('<view wx:if="{{a && b}}" />'));});
+test('标签验证器识别多余结束标签、交错标签、未闭合模板',()=>{for(const source of ['<view><block></view></block>','<view></view></view>','<template name="x"><view /></template></view>','<swiper><swiper-item></swiper>'])assert.throws(()=>parse(source));});
+test('标签验证器保留引号内比较符并检查template与image完整闭合',()=>{assert.doesNotThrow(()=>parse('<view wx:if="{{a > 2}}"><image src="x" /><template name="x"><button>确定</button></template></view>'));assert.throws(()=>parse('<image src="x">'));assert.throws(()=>syntax('function f(){ await task(); }','故障.js'));});

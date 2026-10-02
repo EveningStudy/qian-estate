@@ -1,0 +1,1 @@
+const { define } = require('../../lib/page'); Page(define({ render(s) { const agent=(s.agents || []).find(a => a.id === this.options.id) || null; this.setData({agent,canChat:!!agent && agent.id !== s.user.id}); } }));

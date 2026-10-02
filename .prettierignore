@@ -1,0 +1,7 @@
+dist
+node_modules
+server/data
+public/assets
+package-lock.json
+mini/**/*.wxml
+mini/**/*.wxss

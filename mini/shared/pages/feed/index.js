@@ -1,0 +1,1 @@
+const { define } = require('../../lib/page'); Page(define({ render(s) { const key = this.options.collection || 'notifications'; this.setData({ title: key === 'faqs' ? '房产问答' : key === 'transactions' ? '成交记录' : '服务动态', items: s[key] || [] }); } }));

@@ -1,0 +1,59 @@
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: api
+    # 相对路径以本 Compose 文件目录为基准；脚本传入同一环境文件的绝对路径。
+    env_file:
+      - ${QIAN_ENV_FILE:-.env.production}
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: "4310"
+      DATA_DIR: /var/lib/qian-estate
+    restart: unless-stopped
+    init: true
+    read_only: true
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+    tmpfs: ["/tmp"]
+    volumes: ["qian-estate-data:/var/lib/qian-estate"]
+    # 仅容器网络可访问，不得添加 ports 或使用主机网络。
+    expose: ["4310"]
+    networks: [backend]
+    stop_grace_period: 15s
+  nginx:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+      target: nginx
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    volumes:
+      - type: bind
+        source: ${TLS_CERT_DIR:?请配置证书目录绝对路径}
+        target: /etc/nginx/certs
+        read_only: true
+        bind:
+          create_host_path: false
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [backend]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+networks:
+  # 不设置 internal:true：微信需要出站网络；私网 API 不映射宿主端口。
+  backend:
+    driver: bridge
+volumes:
+  qian-estate-data:
